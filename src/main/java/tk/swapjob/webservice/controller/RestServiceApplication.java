@@ -1,4 +1,4 @@
-package com.example.restservice;
+package tk.swapjob.webservice.controller;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
