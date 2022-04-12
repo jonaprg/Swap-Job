@@ -1,12 +1,24 @@
 package tk.swapjob.webservice.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "User",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email")
+        })
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
     private String lastName;
+    @Email
     private String email;
     private Integer postalCode;
     private String phone;
@@ -15,9 +27,23 @@ public class User {
     private String description;
     private Status status;
 
-    private List<Skill> skillList;
-    private List<Preference> preferenceList;
-    private List<MatchOffer> offerMatchList;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserSkills",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "skillId"))
+    private Set<Skill> skillList = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserPreferences",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "preferenceId"))
+    private Set<Preference> preferenceList = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserMatchOffer",
+        joinColumns = @JoinColumn(name = "userId"),
+        inverseJoinColumns = @JoinColumn(name = "offerId"))
+    private Set<MatchOffer> offerList = new HashSet<>();
 
     //region Constructors
     //Every time constructor
@@ -44,6 +70,10 @@ public class User {
         this.birthDate = birthDate;
         this.isVisible = true;
         this.description = description;
+    }
+
+    public User() {
+
     }
     //endregion
 
@@ -128,28 +158,5 @@ public class User {
         this.status = status;
     }
 
-    public List<Skill> getSkillList() {
-        return skillList;
-    }
-
-    public void setSkillList(List<Skill> skillList) {
-        this.skillList = skillList;
-    }
-
-    public List<Preference> getPreferenceList() {
-        return preferenceList;
-    }
-
-    public void setPreferenceList(List<Preference> preferenceList) {
-        this.preferenceList = preferenceList;
-    }
-
-    public List<MatchOffer> getOfferMatchList() {
-        return offerMatchList;
-    }
-
-    public void setOfferMatchList(List<MatchOffer> offerMatchList) {
-        this.offerMatchList = offerMatchList;
-    }
     //endregion
 }

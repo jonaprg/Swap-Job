@@ -1,8 +1,15 @@
 package tk.swapjob.webservice.model;
 
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "Offer")
 public class Offer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private String description;
@@ -10,20 +17,38 @@ public class Offer {
     private Boolean isRemote;
     private Boolean isVisible;
 
-    private List<Skill> skillList;
-    private List<MatchOffer> matchOfferList;
-    private List<Preference> preferenceList;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "OfferSkills",
+            joinColumns = @JoinColumn(name = "offerId"),
+            inverseJoinColumns = @JoinColumn(name = "skillId"))
+    private Set<Skill> skillList = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserMatchOffer",
+            joinColumns = @JoinColumn(name = "offerId"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
+    private Set<MatchOffer> offerList = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "OfferPreferences",
+            joinColumns = @JoinColumn(name = "offerId"),
+            inverseJoinColumns = @JoinColumn(name = "preferenceId"))
+    private Set<Preference> preferenceList = new HashSet<>();
 
     //region Constructors
-    public Offer(Integer id, String title, String description, Float salary, Boolean isRemote, Boolean isVisible, List<Skill> skillList) {
+    public Offer(Integer id, String title, String description, Float salary, Boolean isRemote, Boolean isVisible) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.salary = salary;
         this.isRemote = isRemote;
         this.isVisible = isVisible;
-        this.skillList = skillList;
     }
+
+    public Offer() {
+    }
+
     //endregion
 
     //region Getters & Setters
@@ -75,30 +100,5 @@ public class Offer {
     public void setVisible(Boolean visible) {
         isVisible = visible;
     }
-
-    public List<Skill> getSkillList() {
-        return skillList;
-    }
-
-    public void setSkillList(List<Skill> skillList) {
-        this.skillList = skillList;
-    }
-
-    public List<MatchOffer> getMatchOfferList() {
-        return matchOfferList;
-    }
-
-    public void setMatchOfferList(List<MatchOffer> matchOfferList) {
-        this.matchOfferList = matchOfferList;
-    }
-
-    public List<Preference> getPreferenceList() {
-        return preferenceList;
-    }
-
-    public void setPreferenceList(List<Preference> preferenceList) {
-        this.preferenceList = preferenceList;
-    }
-
     //endregion
 }

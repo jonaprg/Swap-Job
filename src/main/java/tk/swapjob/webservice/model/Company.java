@@ -1,8 +1,13 @@
 package tk.swapjob.webservice.model;
 
-import java.util.List;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
+@Entity
+@Table(name = "Company")
 public class Company {
+    @Id
     private Integer id;
     private String name;
     private String coordinates;
@@ -11,11 +16,14 @@ public class Company {
     private String description;
     private Boolean isVisible;
 
-    private List<Offer> offerList;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name ="Offer",
+            joinColumns = @JoinColumn(name = "companyId"))
+    private Set<Offer> offerList = new HashSet<>();
 
     //region Constructors
     //Every time constructor
-    public Company(Integer id, String name, String coordinates, String email, String imageUrl, String description, Boolean isVisible, List<Offer> offerList) {
+    public Company(Integer id, String name, String coordinates, String email, String imageUrl, String description, Boolean isVisible) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -23,11 +31,10 @@ public class Company {
         this.imageUrl = imageUrl;
         this.description = description;
         this.isVisible = isVisible;
-        this.offerList = offerList;
     }
 
     //First time constructor
-    public Company(Integer id, String name, String coordinates, String email, String imageUrl, String description, List<Offer> offerList) {
+    public Company(Integer id, String name, String coordinates, String email, String imageUrl, String description) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -35,8 +42,11 @@ public class Company {
         this.imageUrl = imageUrl;
         this.description = description;
         this.isVisible = true;
-        this.offerList = offerList;
     }
+
+    public Company() {
+    }
+
     //endregion
 
     //region Getters & Setters
@@ -94,14 +104,6 @@ public class Company {
 
     public void setVisible(Boolean visible) {
         isVisible = visible;
-    }
-
-    public List<Offer> getOfferList() {
-        return offerList;
-    }
-
-    public void setOfferList(List<Offer> offerList) {
-        this.offerList = offerList;
     }
     //endregion
 }

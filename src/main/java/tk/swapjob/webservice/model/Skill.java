@@ -1,6 +1,12 @@
 package tk.swapjob.webservice.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Skills")
 public class Skill {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private String description;
@@ -11,6 +17,10 @@ public class Skill {
         this.title = title;
         this.description = description;
     }
+
+    public Skill() {
+    }
+
     //endregion
 
     //region Getters & Setters

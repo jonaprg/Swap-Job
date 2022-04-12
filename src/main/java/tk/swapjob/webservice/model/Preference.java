@@ -1,6 +1,12 @@
 package tk.swapjob.webservice.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Preferences")
 public class Preference {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private Float lowThreshold;
@@ -15,6 +21,10 @@ public class Preference {
         this.highThreshold = highThreshold;
         this.value = value;
     }
+
+    public Preference() {
+    }
+
     //endregion
 
     //region Getters & Setters

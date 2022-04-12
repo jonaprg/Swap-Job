@@ -1,12 +1,23 @@
 package tk.swapjob.webservice.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "UserMatchOffer")
 public class MatchOffer {
+    @Id
     private Integer userId;
+    @Id
     private Integer offerId;
     private Boolean isFinalized;
     private Boolean isContracted;
 
+    @ManyToOne
+    @JoinColumn(name = "FK_User")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_Offer")
     private Offer offer;
 
     //region Constructors
@@ -26,6 +37,10 @@ public class MatchOffer {
         this.isContracted = isContracted;
         //TODO: yet to populate user and offer
     }
+
+    public MatchOffer() {
+    }
+
     //endregion
 
     //region Getters & Setters
