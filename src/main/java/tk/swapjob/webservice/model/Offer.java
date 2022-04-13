@@ -1,13 +1,14 @@
 package tk.swapjob.webservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "Offer")
-public class Offer {
+public class Offer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,35 +18,28 @@ public class Offer {
     private Boolean isRemote;
     private Boolean isVisible;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "OfferSkills",
-            joinColumns = @JoinColumn(name = "offerId"),
-            inverseJoinColumns = @JoinColumn(name = "skillId"))
+    @JoinTable(name = "offer_skills",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private Set<Skill> skillList = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserMatchOffer",
-            joinColumns = @JoinColumn(name = "offerId"),
-            inverseJoinColumns = @JoinColumn(name = "userId"))
-    private Set<MatchOffer> offerList = new HashSet<>();
+    @JoinColumn(name = "offer_id")
+    private Set<MatchOffer> matchOfferList = new HashSet<>();
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "OfferPreferences",
-            joinColumns = @JoinColumn(name = "offerId"),
-            inverseJoinColumns = @JoinColumn(name = "preferenceId"))
+    @JoinTable(name = "offer_preferences",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "preference_id"))
     private Set<Preference> preferenceList = new HashSet<>();
 
     //region Constructors
-    public Offer(Integer id, String title, String description, Float salary, Boolean isRemote, Boolean isVisible) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.salary = salary;
-        this.isRemote = isRemote;
-        this.isVisible = isVisible;
-    }
-
     public Offer() {
     }
 
@@ -100,5 +94,38 @@ public class Offer {
     public void setVisible(Boolean visible) {
         isVisible = visible;
     }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public Set<Skill> getSkillList() {
+        return skillList;
+    }
+
+    public void setSkillList(Set<Skill> skillList) {
+        this.skillList = skillList;
+    }
+
+    public Set<MatchOffer> getMatchOfferList() {
+        return matchOfferList;
+    }
+
+    public void setMatchOfferList(Set<MatchOffer> matchOfferList) {
+        this.matchOfferList = matchOfferList;
+    }
+
+    public Set<Preference> getPreferenceList() {
+        return preferenceList;
+    }
+
+    public void setPreferenceList(Set<Preference> preferenceList) {
+        this.preferenceList = preferenceList;
+    }
+
     //endregion
 }

@@ -1,55 +1,40 @@
 package tk.swapjob.webservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Company")
-public class Company {
+@Table(name = "company")
+public class Company implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 50)
     private String name;
+    @Column(length = 50)
     private String coordinates;
+    @Column(length = 50)
     private String email;
+    @Column(length = 100)
     private String imageUrl;
+    @Column(length = 300)
     private String description;
     private Boolean isVisible;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name ="Offer",
-            joinColumns = @JoinColumn(name = "companyId"))
+    @JoinColumn(name = "company_id")
     private Set<Offer> offerList = new HashSet<>();
 
     //region Constructors
     //Every time constructor
-    public Company(Integer id, String name, String coordinates, String email, String imageUrl, String description, Boolean isVisible) {
-        this.id = id;
-        this.name = name;
-        this.coordinates = coordinates;
-        this.email = email;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.isVisible = isVisible;
-    }
-
-    //First time constructor
-    public Company(Integer id, String name, String coordinates, String email, String imageUrl, String description) {
-        this.id = id;
-        this.name = name;
-        this.coordinates = coordinates;
-        this.email = email;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.isVisible = true;
-    }
-
     public Company() {
     }
-
     //endregion
 
     //region Getters & Setters
+
     public Integer getId() {
         return id;
     }
@@ -105,5 +90,14 @@ public class Company {
     public void setVisible(Boolean visible) {
         isVisible = visible;
     }
+
+    public Set<Offer> getOfferList() {
+        return offerList;
+    }
+
+    public void setOfferList(Set<Offer> offerList) {
+        this.offerList = offerList;
+    }
+
     //endregion
 }

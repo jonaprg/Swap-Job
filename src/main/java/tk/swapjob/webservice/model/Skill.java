@@ -1,10 +1,11 @@
 package tk.swapjob.webservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Skills")
-public class Skill {
+public class Skill implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,6 +25,7 @@ public class Skill {
     //endregion
 
     //region Getters & Setters
+
     public Integer getId() {
         return id;
     }

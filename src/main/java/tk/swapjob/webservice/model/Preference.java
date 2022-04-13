@@ -1,10 +1,11 @@
 package tk.swapjob.webservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Preferences")
-public class Preference {
+public class Preference implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -14,14 +15,6 @@ public class Preference {
     private Float value;
 
     //region Constructor
-    public Preference(Integer id, String title, Float lowThreshold, Float highThreshold, Float value) {
-        this.id = id;
-        this.title = title;
-        this.lowThreshold = lowThreshold;
-        this.highThreshold = highThreshold;
-        this.value = value;
-    }
-
     public Preference() {
     }
 

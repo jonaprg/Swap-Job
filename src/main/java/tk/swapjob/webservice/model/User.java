@@ -2,17 +2,14 @@ package tk.swapjob.webservice.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "User",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "email")
-        })
-public class User {
+@Table(name = "User")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,59 +22,36 @@ public class User {
     private Timestamp birthDate;
     private Boolean isVisible;
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_status")
     private Status status;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserSkills",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "skillId"))
+    @JoinTable(name = "user_skills",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "is_skill"))
     private Set<Skill> skillList = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserPreferences",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "preferenceId"))
+    @JoinTable(name = "user_preferences",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_preference"))
     private Set<Preference> preferenceList = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserMatchOffer",
-        joinColumns = @JoinColumn(name = "userId"),
-        inverseJoinColumns = @JoinColumn(name = "offerId"))
-    private Set<MatchOffer> offerList = new HashSet<>();
+    @JoinColumn(name = "user_id")
+    private Set<MatchOffer> matchOfferList = new HashSet<>();
 
     //region Constructors
     //Every time constructor
-    public User(Integer id, String firstName, String lastName, String email, Integer postalCode, String phone, Timestamp birthDate, Boolean isVisible, String description) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.postalCode = postalCode;
-        this.phone = phone;
-        this.birthDate = birthDate;
-        this.isVisible = isVisible;
-        this.description = description;
-    }
-
-    //First time constructor when creating new User
-    public User(Integer id, String firstName, String lastName, String email, Integer postalCode, String phone, Timestamp birthDate, String description) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.postalCode = postalCode;
-        this.phone = phone;
-        this.birthDate = birthDate;
-        this.isVisible = true;
-        this.description = description;
-    }
-
     public User() {
 
     }
     //endregion
 
     //region Getters & Setters
+
     public Integer getId() {
         return id;
     }
@@ -156,6 +130,30 @@ public class User {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Set<Skill> getSkillList() {
+        return skillList;
+    }
+
+    public void setSkillList(Set<Skill> skillList) {
+        this.skillList = skillList;
+    }
+
+    public Set<Preference> getPreferenceList() {
+        return preferenceList;
+    }
+
+    public void setPreferenceList(Set<Preference> preferenceList) {
+        this.preferenceList = preferenceList;
+    }
+
+    public Set<MatchOffer> getMatchOfferList() {
+        return matchOfferList;
+    }
+
+    public void setMatchOfferList(Set<MatchOffer> matchOfferList) {
+        this.matchOfferList = matchOfferList;
     }
 
     //endregion
