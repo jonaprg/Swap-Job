@@ -9,7 +9,9 @@ public class Skill implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 50, nullable = false)
     private String title;
+    @Column(length = 300, nullable = false)
     private String description;
 
     //region Constructors

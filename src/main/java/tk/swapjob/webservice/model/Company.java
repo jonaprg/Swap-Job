@@ -11,16 +11,17 @@ public class Company implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String name;
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String coordinates;
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String email;
     @Column(length = 100)
     private String imageUrl;
-    @Column(length = 300)
+    @Column(length = 300, nullable = false)
     private String description;
+    @Column(nullable = false)
     private Boolean isVisible;
 
     @OneToMany(fetch = FetchType.EAGER)

@@ -13,14 +13,22 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 50, nullable = false)
     private String firstName;
+    @Column(length = 50, nullable = false)
     private String lastName;
     @Email
+    @Column(length = 50, nullable = false)
     private String email;
+    @Column(nullable = false)
     private Integer postalCode;
+    @Column(length = 50, nullable = false)
     private String phone;
+    @Column(nullable = false)
     private Timestamp birthDate;
+    @Column(nullable = false)
     private Boolean isVisible;
+    @Column(length = 300, nullable = false)
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)

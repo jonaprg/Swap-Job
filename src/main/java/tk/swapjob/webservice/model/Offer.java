@@ -1,5 +1,7 @@
 package tk.swapjob.webservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -12,14 +14,20 @@ public class Offer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 50, nullable = false)
     private String title;
+    @Column(length = 300, nullable = false)
     private String description;
+    @Column(nullable = false)
     private Float salary;
+    @Column(nullable = false)
     private Boolean isRemote;
+    @Column(nullable = false)
     private Boolean isVisible;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
+    @JsonBackReference
     private Company company;
 
     @ManyToMany(fetch = FetchType.EAGER)

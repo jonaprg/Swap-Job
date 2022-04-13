@@ -9,9 +9,13 @@ public class Preference implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(length = 50, nullable = false)
     private String title;
+    @Column(nullable = false)
     private Float lowThreshold;
+    @Column(nullable = false)
     private Float highThreshold;
+    @Column(nullable = false)
     private Float value;
 
     //region Constructor

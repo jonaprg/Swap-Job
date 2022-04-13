@@ -1,5 +1,7 @@
 package tk.swapjob.webservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -7,16 +9,21 @@ import java.io.Serializable;
 @Table(name = "match_offer")
 public class MatchOffer implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false)
     private Boolean isFinalized;
+    @Column(nullable = false)
     private Boolean isContracted;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "offer_id")
+    @JsonBackReference
     private Offer offer;
 
     //region Constructors

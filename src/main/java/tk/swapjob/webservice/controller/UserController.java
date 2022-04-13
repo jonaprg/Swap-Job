@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.swapjob.webservice.model.User;
 import tk.swapjob.webservice.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController{
@@ -17,9 +16,7 @@ public class UserController{
     private UserRepository userRepository;
 
     @GetMapping("/user")
-    public String getUser(@RequestParam String email) {
-        ArrayList<User> users = (ArrayList<User>) userRepository.findAll();
-
-        return "Hello World\n" + userRepository.findAll() ;
+    public User getUser(@RequestParam String email) {
+        return userRepository.findUserByEmail(email);
     }
 }
