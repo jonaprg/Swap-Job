@@ -12,9 +12,9 @@ import tk.swapjob.webservice.security.services.UserDetailsImpl;
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    @Value("${bezkoder.app.jwtSecret}")
+    @Value("${tk.swapjob.jwtSecret}")
     private String jwtSecret;
-    @Value("${bezkoder.app.jwtExpirationMs}")
+    @Value("${tk.swapjob.jwtExpirationMs}")
     private int jwtExpirationMs;
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();

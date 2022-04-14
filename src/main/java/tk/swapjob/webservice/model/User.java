@@ -57,21 +57,21 @@ public class User implements Serializable {
     @JoinColumn(name = "user_id")
     private Set<MatchOffer> matchOfferList = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(	name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
     //region Constructors
     //Every time constructor
     public User() {
-        this.roles.add(new Role(ERole.ROLE_ADMIN));
     }
 
-    public User(String email, String password) {
+    public User(String email, String password, String firstName, String lastName, Integer postalCode, String phone, Timestamp birthDate, String description) {
         this.email = email;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.birthDate = birthDate;
+        this.isVisible = true;
+        this.description = description;
     }
     //endregion
 
@@ -187,14 +187,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password =  password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     //endregion

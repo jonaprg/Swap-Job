@@ -1,6 +1,7 @@
 package tk.swapjob.webservice.controller;
 
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,8 @@ import tk.swapjob.webservice.repository.UserRepository;
 import tk.swapjob.webservice.security.jwt.JwtUtils;
 import tk.swapjob.webservice.security.services.UserDetailsImpl;
 
+import java.sql.Timestamp;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -34,10 +37,11 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
@@ -46,6 +50,7 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getEmail()));
     }
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsUserByEmail(signUpRequest.getEmail())) {
@@ -53,8 +58,18 @@ public class AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
-        // Create new user's account
-        User user = new User(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
+
+        String email = signUpRequest.getEmail();
+        String password = encoder.encode(signUpRequest.getPassword());
+        String firstName = signUpRequest.getFirstName();
+        String lastName = signUpRequest.getLastName();
+        String birtDateString = signUpRequest.getBirthDate();
+        String phone = signUpRequest.getPhone();
+        Integer postalCode = signUpRequest.getPostalCode();
+        String description = signUpRequest.getDescription();
+
+        Timestamp birthDate = Timestamp.valueOf(birtDateString + " 00:00:00");
+        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description);
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
