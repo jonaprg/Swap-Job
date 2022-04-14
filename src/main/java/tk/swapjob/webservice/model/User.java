@@ -1,5 +1,8 @@
 package tk.swapjob.webservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import tk.swapjob.webservice.dao.requests.SignupRequest;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
@@ -20,6 +23,9 @@ public class User implements Serializable {
     @Email
     @Column(length = 50, nullable = false)
     private String email;
+    @Column(length = 300, nullable = false)
+    @JsonIgnore
+    private String password;
     @Column(nullable = false)
     private Integer postalCode;
     @Column(length = 50, nullable = false)
@@ -51,10 +57,21 @@ public class User implements Serializable {
     @JoinColumn(name = "user_id")
     private Set<MatchOffer> matchOfferList = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(	name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
     //region Constructors
     //Every time constructor
     public User() {
+        this.roles.add(new Role(ERole.ROLE_ADMIN));
+    }
 
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
     //endregion
 
@@ -162,6 +179,22 @@ public class User implements Serializable {
 
     public void setMatchOfferList(Set<MatchOffer> matchOfferList) {
         this.matchOfferList = matchOfferList;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password =  password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     //endregion
