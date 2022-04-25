@@ -1,5 +1,7 @@
 package tk.swapjob.dao.requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.NotBlank;
 
 public class LoginRequest {
@@ -23,5 +25,15 @@ public class LoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @JsonIgnore
+    public boolean isValid() {
+        return email != null && password != null;
+    }
+
+    @JsonIgnore
+    public boolean isInvalid() {
+        return !isValid();
     }
 }
