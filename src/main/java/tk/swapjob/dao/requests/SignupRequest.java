@@ -1,33 +1,43 @@
 package tk.swapjob.dao.requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
 
 public class SignupRequest {
     @NotBlank
+    @NotNull
     @Size(max = 50)
     @Email
     private String email;
 
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 40)
     private String password;
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 50)
     private String firstName;
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 50)
     private String lastName;
     @NotBlank
+    @NotNull
     private Integer postalCode;
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 50)
     private String phone;
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 50)
     private String birthDate;
     @NotBlank
+    @NotNull
     @Size(min = 6, max = 300)
     private String description;
 
@@ -93,5 +103,17 @@ public class SignupRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @JsonIgnore
+    public boolean isValid() {
+        return email != null && password != null && firstName != null
+                && lastName != null && postalCode != null && phone != null
+                && birthDate != null && description != null;
+    }
+
+    @JsonIgnore
+    public boolean isInvalid() {
+        return !isValid();
     }
 }

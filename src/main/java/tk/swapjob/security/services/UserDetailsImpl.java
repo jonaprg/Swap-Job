@@ -22,7 +22,6 @@ public class UserDetailsImpl implements UserDetails {
         this.password = password;
     }
     public static UserDetailsImpl build(User user) {
-
         return new UserDetailsImpl(
                 (long) user.getId(),
                 user.getEmail(),
