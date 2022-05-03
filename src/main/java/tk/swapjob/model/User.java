@@ -35,6 +35,9 @@ public class User implements Serializable {
     private Boolean isVisible;
     @Column(length = 300, nullable = false)
     private String description;
+    @Column(nullable = false)
+    @JsonIgnore
+    private boolean isCompanyUser;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_status")
@@ -56,12 +59,17 @@ public class User implements Serializable {
     @JoinColumn(name = "user_id")
     private Set<MatchOffer> matchOfferList = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_company")
+    @JsonIgnore
+    private Company company;
+
     //region Constructors
     //Every time constructor
     public User() {
     }
 
-    public User(String email, String password, String firstName, String lastName, Integer postalCode, String phone, Timestamp birthDate, String description) {
+    public User(String email, String password, String firstName, String lastName, Integer postalCode, String phone, Timestamp birthDate, String description, boolean isCompanyUser) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -71,10 +79,19 @@ public class User implements Serializable {
         this.birthDate = birthDate;
         this.isVisible = true;
         this.description = description;
+        this.isCompanyUser = isCompanyUser;
     }
     //endregion
 
     //region Getters & Setters
+
+    public boolean isCompanyUser() {
+        return isCompanyUser;
+    }
+
+    public void setCompanyUser(boolean companyUser) {
+        isCompanyUser = companyUser;
+    }
 
     public Integer getId() {
         return id;
@@ -186,6 +203,31 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password =  password;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    @JsonIgnore
+    public User getProfile(){
+        User user = new User();
+        user.setId(this.id);
+        user.setFirstName(this.firstName);
+        user.setLastName(this.lastName);
+        user.setEmail(this.email);
+        user.setPostalCode(this.postalCode);
+        user.setPhone(this.phone);
+        user.setBirthDate(this.birthDate);
+        user.setVisible(this.isVisible);
+        user.setDescription(this.description);
+        user.setStatus(this.status);
+        user.setSkillList(this.skillList);
+        return user;
     }
 
     //endregion
