@@ -11,6 +11,7 @@ import tk.swapjob.model.User;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
+
 import javax.validation.Valid;
 import java.sql.Timestamp;
 
@@ -92,5 +93,17 @@ public class UserController {
         }
 
         return ResponseEntity.ok(user.getProfile());
+    }
+
+    @GetMapping("/user/matches")
+    public ResponseEntity<?> getMatches() {
+        String email = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        return ResponseEntity.ok(user.getMatchOfferList());
     }
 }
