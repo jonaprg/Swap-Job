@@ -82,6 +82,7 @@ public class AuthController {
         String phone = signUpRequest.getPhone();
         Integer postalCode = signUpRequest.getPostalCode();
         String description = signUpRequest.getDescription();
+        boolean isCompanyUser = signUpRequest.isCompanyUser();
 
         Timestamp birthDate;
         try {
@@ -90,7 +91,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid birth date"));
         }
 
-        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description);
+        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description, isCompanyUser);
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

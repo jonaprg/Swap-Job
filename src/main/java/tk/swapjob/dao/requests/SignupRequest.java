@@ -40,6 +40,9 @@ public class SignupRequest {
     @NotNull
     @Size(min = 6, max = 300)
     private String description;
+    @NotBlank
+    @NotNull
+    private boolean isCompanyUser;
 
     public String getEmail() {
         return email;
@@ -103,6 +106,14 @@ public class SignupRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isCompanyUser() {
+        return isCompanyUser;
+    }
+
+    public void setCompanyUser(boolean companyUser) {
+        isCompanyUser = companyUser;
     }
 
     @JsonIgnore
