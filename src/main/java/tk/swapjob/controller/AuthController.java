@@ -1,7 +1,5 @@
 package tk.swapjob.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,11 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.LoginRequest;
 import tk.swapjob.dao.requests.SignupRequest;
 import tk.swapjob.dao.responses.JwtResponse;
@@ -23,11 +17,10 @@ import tk.swapjob.model.User;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.security.services.UserDetailsImpl;
+import tk.swapjob.utils.Utils;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.regex.Pattern;
-
-import static tk.swapjob.utils.Utils.REGEX_EMAIL_PATTERN;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -78,7 +71,7 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        if (!isEmailValid(signUpRequest.getEmail())) {
+        if (!Utils.isEmailValid(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid email"));
         }
         String email = signUpRequest.getEmail();
@@ -89,6 +82,7 @@ public class AuthController {
         String phone = signUpRequest.getPhone();
         Integer postalCode = signUpRequest.getPostalCode();
         String description = signUpRequest.getDescription();
+        boolean isCompanyUser = signUpRequest.isCompanyUser();
 
         Timestamp birthDate;
         try {
@@ -97,15 +91,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid birth date"));
         }
 
-        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description);
+        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description, isCompanyUser);
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-    }
-
-    private boolean isEmailValid(String email) {
-        return Pattern.compile(REGEX_EMAIL_PATTERN)
-                .matcher(email)
-                .matches();
     }
 }

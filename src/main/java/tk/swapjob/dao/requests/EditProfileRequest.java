@@ -1,64 +1,23 @@
 package tk.swapjob.dao.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import tk.swapjob.model.Preference;
+import tk.swapjob.model.Skill;
 
-import javax.persistence.Column;
-import javax.validation.constraints.*;
-import java.sql.Timestamp;
+import java.util.List;
 
-public class SignupRequest {
-    @NotBlank
-    @NotNull
-    @Size(max = 50)
-    @Email
-    private String email;
-
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 40)
-    private String password;
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 50)
+public class EditProfileRequest {
     private String firstName;
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 50)
     private String lastName;
-    @NotBlank
-    @NotNull
+    private String email;
     private Integer postalCode;
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 50)
     private String phone;
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 50)
     private String birthDate;
-    @NotBlank
-    @NotNull
-    @Size(min = 6, max = 300)
+    private Boolean isVisible;
     private String description;
-    @NotBlank
-    @NotNull
-    private boolean isCompanyUser;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    private Integer status_id;
+    private List<Skill> skillList;
+    private List<Preference> preferenceList;
 
     public String getFirstName() {
         return firstName;
@@ -74,6 +33,14 @@ public class SignupRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Integer getPostalCode() {
@@ -100,6 +67,14 @@ public class SignupRequest {
         this.birthDate = birthDate;
     }
 
+    public Boolean getVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(Boolean visible) {
+        isVisible = visible;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -108,17 +83,33 @@ public class SignupRequest {
         this.description = description;
     }
 
-    public boolean isCompanyUser() {
-        return isCompanyUser;
+    public Integer getStatus_id() {
+        return status_id;
     }
 
-    public void setCompanyUser(boolean companyUser) {
-        isCompanyUser = companyUser;
+    public void setStatus_id(Integer status_id) {
+        this.status_id = status_id;
+    }
+
+    public List<Skill> getSkillList() {
+        return skillList;
+    }
+
+    public void setSkillList(List<Skill> skillList) {
+        this.skillList = skillList;
+    }
+
+    public List<Preference> getPreferenceList() {
+        return preferenceList;
+    }
+
+    public void setPreferenceList(List<Preference> preferenceList) {
+        this.preferenceList = preferenceList;
     }
 
     @JsonIgnore
     public boolean isValid() {
-        return email != null && password != null && firstName != null
+        return email != null && firstName != null
                 && lastName != null && postalCode != null && phone != null
                 && birthDate != null && description != null;
     }

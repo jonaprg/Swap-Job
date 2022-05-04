@@ -5,6 +5,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import tk.swapjob.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
 public class Utils {
     public static String REGEX_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -16,5 +17,11 @@ public class Utils {
                         .getRequest();
         String token = JwtUtils.parseJwt(request);
         return jwtUtils.getUserNameFromJwtToken(token);
+    }
+
+    public static boolean isEmailValid(String email) {
+        return Pattern.compile(REGEX_EMAIL_PATTERN)
+                .matcher(email)
+                .matches();
     }
 }
