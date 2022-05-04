@@ -53,6 +53,14 @@ public class Offer implements Serializable {
     public Offer() {
     }
 
+    public Offer(String Title, String description, boolean remote, float salary) {
+        this.title = Title;
+        this.description=description;
+        this.isRemote=remote;
+        this.isVisible=true;
+        this.salary=salary;
+    }
+
     //endregion
 
     //region Getters & Setters
