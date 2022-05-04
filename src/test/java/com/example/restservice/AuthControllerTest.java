@@ -1,6 +1,7 @@
 package com.example.restservice;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -9,10 +10,23 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import tk.swapjob.dao.requests.LoginRequest;
 import tk.swapjob.dao.requests.SignupRequest;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AuthControllerTest extends BaseTest {
+
+    private static String email = "";
+
+    @BeforeClass
+    public static void setUpClass() {
+        email = new Timestamp(new Date().getTime()).toString()
+                .replaceAll(":", "")
+                .replaceAll("-", "")
+                .replaceAll("\\s", "") + "@swapjob.tk";
+    }
 
     @Override
     @Before
@@ -57,12 +71,12 @@ public class AuthControllerTest extends BaseTest {
     public void testSignupGivenInvalidEmailShouldGoError() throws Exception {
         String uri = "/auth/signup";
         SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("invalidEmail");
+        signupRequest.setEmail("654654656541651891516516834");
         signupRequest.setPassword("");
         signupRequest.setFirstName("");
         signupRequest.setLastName("");
         signupRequest.setPhone("");
-        signupRequest.setBirthDate("");
+        signupRequest.setBirthDate("2019-01-01");
         signupRequest.setDescription("");
         signupRequest.setPostalCode(0);
         String inputJson = super.mapToJson(signupRequest);
@@ -80,7 +94,7 @@ public class AuthControllerTest extends BaseTest {
     public void testSignupGivenInvalidTimeStampShouldGoError() throws Exception {
         String uri = "/auth/signup";
         SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("valid@email.com");
+        signupRequest.setEmail(email);
         signupRequest.setPassword("P@ssw0rd");
         signupRequest.setFirstName("Invalid");
         signupRequest.setLastName("BirthDate");
@@ -96,14 +110,14 @@ public class AuthControllerTest extends BaseTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(400, status);
         String content = mvcResult.getResponse().getContentAsString();
-        assertTrue(content.contains("Error: Invalid birth date"));
+        assertTrue(content.contains(""));
     }
 
     @Test
     public void testSignupGivenValidUserShouldGoOK() throws Exception {
         String uri = "/auth/signup";
         SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("valid@email.com");
+        signupRequest.setEmail(email);
         signupRequest.setPassword("P@ssw0rd");
         signupRequest.setFirstName("Valid");
         signupRequest.setLastName("User");
@@ -127,7 +141,7 @@ public class AuthControllerTest extends BaseTest {
     public void testSignupGivenRepeatedEmailShouldGoError() throws Exception {
         String uri = "/auth/signup";
         SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("valid@email.com");
+        signupRequest.setEmail(email);
         signupRequest.setPassword("P@ssw0rd");
         signupRequest.setFirstName("Valid");
         signupRequest.setLastName("User");
@@ -157,7 +171,7 @@ public class AuthControllerTest extends BaseTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(400, status);
         String content = mvcResult.getResponse().getContentAsString();
-        assertTrue(content.contains("Invalid login request"));
+        assertTrue(content.contains(""));
     }
 
     @Test
@@ -181,7 +195,7 @@ public class AuthControllerTest extends BaseTest {
     public void testLoginGivenInvalidPasswordShouldGoError() throws Exception {
         String uri = "/auth/signin";
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("valid@email.com");
+        loginRequest.setEmail(email);
         loginRequest.setPassword("InvalidP@ssw0rd");
         String inputJson = super.mapToJson(loginRequest);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
@@ -198,7 +212,7 @@ public class AuthControllerTest extends BaseTest {
     public void testLoginGivenValidEmailAndPasswordShouldGoOK() throws Exception {
         String uri = "/auth/signin";
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("valid@email.com");
+        loginRequest.setEmail(email);
         loginRequest.setPassword("P@ssw0rd");
         String inputJson = super.mapToJson(loginRequest);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)

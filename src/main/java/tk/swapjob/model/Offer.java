@@ -12,7 +12,7 @@ import java.util.Set;
 public class Offer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(length = 50, nullable = false)
     private String title;
     @Column(length = 300, nullable = false)
@@ -37,6 +37,7 @@ public class Offer implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "offer_id")
+    @JsonBackReference
     private Set<MatchOffer> matchOfferList = new HashSet<>();
 
 
@@ -54,11 +55,11 @@ public class Offer implements Serializable {
 
     //region Getters & Setters
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

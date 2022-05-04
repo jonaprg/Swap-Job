@@ -1,5 +1,6 @@
 package tk.swapjob.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -57,6 +58,7 @@ public class User implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private Set<MatchOffer> matchOfferList = new HashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -84,7 +86,7 @@ public class User implements Serializable {
     //endregion
 
     //region Getters & Setters
-
+    @JsonIgnore
     public boolean isCompanyUser() {
         return isCompanyUser;
     }
@@ -202,7 +204,7 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password =  password;
+        this.password = password;
     }
 
     public Company getCompany() {
@@ -214,7 +216,7 @@ public class User implements Serializable {
     }
 
     @JsonIgnore
-    public User getProfile(){
+    public User getProfile() {
         User user = new User();
         user.setId(this.id);
         user.setFirstName(this.firstName);
