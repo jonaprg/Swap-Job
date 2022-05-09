@@ -11,6 +11,5 @@ public interface OfferRepository extends CrudRepository<Offer, Long> {
 
     List<Offer> findByIsVisibleIsTrue();
 
-
     boolean existsById(long id);
 }

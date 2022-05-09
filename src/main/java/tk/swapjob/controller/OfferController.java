@@ -27,7 +27,14 @@ public class OfferController {
     @Autowired
     private JwtUtils jwt;
 
-    @GetMapping("/offers/recommended")
+    @GetMapping("/offer/all")
+    public ResponseEntity<?> getAllOffers() {
+        List<Offer> offers = offerRepository.findByIsVisibleIsTrue();
+
+        return ResponseEntity.ok(offers);
+    }
+
+    @GetMapping("/offer/recommended")
     public ResponseEntity<?> getRecommendedOffers() {
         //TODO: implement web socket communication to python
         String username = Utils.getUserFromToken(jwt);
@@ -47,6 +54,8 @@ public class OfferController {
         }
 
         request.setOffers(pythonOffers);
+
+        //WebSocketClient client = new WebSocketClient(request);
 
         return ResponseEntity.ok(request);
     }
