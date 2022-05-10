@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired

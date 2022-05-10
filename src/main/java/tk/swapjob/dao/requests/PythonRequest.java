@@ -3,17 +3,18 @@ package tk.swapjob.dao.requests;
 import tk.swapjob.model.Preference;
 import tk.swapjob.model.Skill;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PythonRequest {
+public class PythonRequest implements Serializable {
     public static class User {
         private List<Float> distance;
         private List<Float> salary;
         private List<Float> labour;
         private Float remote;
         private List<String> skills;
-        private Integer PC;
+        private Integer pc;
 
         public User() {
         }
@@ -61,7 +62,7 @@ public class PythonRequest {
             for (Skill skill : user.getSkillList()) {
                 this.skills.add(skill.getTitle());
             }
-            this.PC = user.getPostalCode();
+            this.pc = user.getPostalCode();
         }
 
         public List<Float> getDistance() {
@@ -104,12 +105,12 @@ public class PythonRequest {
             this.skills = skills;
         }
 
-        public Integer getPC() {
-            return PC;
+        public Integer getPc() {
+            return pc;
         }
 
-        public void setPC(Integer PC) {
-            this.PC = PC;
+        public void setPc(Integer pc) {
+            this.pc = pc;
         }
     }
 
