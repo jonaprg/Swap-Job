@@ -23,6 +23,8 @@ public class Offer implements Serializable {
     private Boolean isRemote;
     @Column(nullable = false)
     private Boolean isVisible;
+    @Column(nullable = false)
+    private Integer labour;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
@@ -51,9 +53,26 @@ public class Offer implements Serializable {
     public Offer() {
     }
 
+    public Offer(String Title, String description, boolean remote, float salary) {
+        this.title = Title;
+        this.description=description;
+        this.isRemote=remote;
+        this.isVisible=true;
+        this.salary=salary;
+    }
+
     //endregion
 
     //region Getters & Setters
+
+
+    public Integer getLabour() {
+        return labour;
+    }
+
+    public void setLabour(Integer labour) {
+        this.labour = labour;
+    }
 
     public Long getId() {
         return id;
