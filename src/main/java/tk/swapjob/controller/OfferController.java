@@ -18,6 +18,9 @@ import tk.swapjob.utils.Utils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +47,6 @@ public class OfferController {
 
     @GetMapping("/offer/recommended")
     public ResponseEntity<?> getRecommendedOffers() throws URISyntaxException {
-        //TODO: implement web socket communication to python
         String username = Utils.getUserFromToken(jwt);
 
         PythonRequest request = new PythonRequest();
@@ -72,24 +74,24 @@ public class OfferController {
 
         request.setOffers(pythonOffers);
 
-        WebsocketClientEndpoint client = new WebsocketClientEndpoint(new URI("ws://localhost:4321/getExpert_offers"));
-
-        final String[] messageA = {null};
-        client.addMessageHandler(message -> messageA[0] = message);
-
         Gson gson = new Gson();
-        client.sendMessage(gson.toJson(request));
-
-        while (messageA[0] == null) {
-        }
+        HttpResponse<String> response = null;
 
         try {
-            client.userSession.close();
-        } catch (IOException e) {
-            System.out.println("Socket closing error");
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest clientRequest = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:4321/expert"))
+                    .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(request)))
+                    .build();
+
+            response = client.send(clientRequest,
+                    HttpResponse.BodyHandlers.ofString());
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
-        List<Long> socketResponse = gson.fromJson(messageA[0], new TypeToken<List<Long>>() {
+        List<Long> socketResponse = gson.fromJson(response.body(), new TypeToken<List<Long>>() {
         }.getType());
         List<Offer> recommendedOffers = new ArrayList<>();
 
