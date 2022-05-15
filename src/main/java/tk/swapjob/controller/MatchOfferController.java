@@ -62,4 +62,28 @@ public class MatchOfferController {
 
         return ResponseEntity.ok(true);
     }
+
+    @PostMapping("/removeMatchOffer")
+    public ResponseEntity<?> removeMatchOffer(@RequestBody MatchOfferRequest request) {
+        String email = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Invalid user");
+        }
+
+        MatchOffer matchOffer = matchOfferRepository.findMatchOfferByOfferIdAndUserId(request.getOfferId(), user.getId());
+
+        if (matchOffer == null) {
+            return ResponseEntity.badRequest().body("Invalid offer id or user id");
+        }
+
+        user.getMatchOfferList().remove(matchOffer);
+
+        matchOfferRepository.delete(matchOffer);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(true);
+    }
 }
