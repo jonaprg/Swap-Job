@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tk.swapjob.dao.requests.PythonRequest;
+import tk.swapjob.dao.responses.OfferResponse;
 import tk.swapjob.model.Offer;
 import tk.swapjob.model.User;
 import tk.swapjob.repository.OfferRepository;
@@ -23,7 +24,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -91,16 +94,16 @@ public class OfferController {
             throw new RuntimeException(e);
         }
 
-        List<Long> socketResponse = gson.fromJson(response.body(), new TypeToken<List<Long>>() {
+        List<Long> pythonResponse = gson.fromJson(response.body(), new TypeToken<List<Long>>() {
         }.getType());
-        List<Offer> recommendedOffers = new ArrayList<>();
+        final List<OfferResponse> recommendedOffers = new ArrayList<>();
 
-        for (Long id : socketResponse) {
-            offerRepository.findById(id).ifPresent(recommendedOffers::add);
+        for (Long id : pythonResponse) {
+            offerRepository.findById(id).ifPresent(offer -> recommendedOffers.add(new OfferResponse(offer)));
         }
 
         if (recommendedOffers.isEmpty()) {
-            recommendedOffers = offers;
+            return ResponseEntity.ok(offers.stream().map(OfferResponse::new).collect(Collectors.toList()));
         }
 
         return ResponseEntity.ok(recommendedOffers);
