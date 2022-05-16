@@ -91,21 +91,25 @@ public class OfferController {
                     HttpResponse.BodyHandlers.ofString());
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error, tpm");
         }
 
-        List<Long> pythonResponse = gson.fromJson(response.body(), new TypeToken<List<Long>>() {
-        }.getType());
-        final List<OfferResponse> recommendedOffers = new ArrayList<>();
 
-        for (Long id : pythonResponse) {
-            offerRepository.findById(id).ifPresent(offer -> recommendedOffers.add(new OfferResponse(offer)));
+        if (response != null) {
+            List<Long> pythonResponse = gson.fromJson(response.body(), new TypeToken<List<Long>>() {
+            }.getType());
+            final List<OfferResponse> recommendedOffers = new ArrayList<>();
+
+            for (Long id : pythonResponse) {
+                offerRepository.findById(id).ifPresent(offer -> recommendedOffers.add(new OfferResponse(offer)));
+            }
+            return ResponseEntity.ok(recommendedOffers);
         }
 
-        if (recommendedOffers.isEmpty()) {
-            return ResponseEntity.ok(offers.stream().map(OfferResponse::new).collect(Collectors.toList()));
+        List<OfferResponse> recommendedOffersFailed = new ArrayList<>();
+        for (Offer offer : offers) {
+            recommendedOffersFailed.add(new OfferResponse(offer));
         }
-
-        return ResponseEntity.ok(recommendedOffers);
+        return ResponseEntity.ok(recommendedOffersFailed);
     }
 }
