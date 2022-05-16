@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.EditProfileRequest;
 import tk.swapjob.dao.responses.MessageResponse;
+import tk.swapjob.dao.responses.MatchOfferResponse;
 import tk.swapjob.model.Preference;
 import tk.swapjob.model.Skill;
 import tk.swapjob.model.User;
@@ -14,6 +15,7 @@ import tk.swapjob.utils.Utils;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -105,6 +107,6 @@ public class UserController {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        return ResponseEntity.ok(user.getMatchOfferList());
+        return ResponseEntity.ok(user.getMatchOfferList().stream().map(MatchOfferResponse::new).collect(Collectors.toList()));
     }
 }
