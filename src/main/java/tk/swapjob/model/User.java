@@ -71,7 +71,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String email, String password, String firstName, String lastName, Integer postalCode, String phone, Timestamp birthDate, String description, boolean isCompanyUser) {
+    public User(String email, String password, String firstName, String lastName, Integer postalCode, String phone, Timestamp birthDate, String description, boolean isCompanyUser, Status status) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -82,6 +82,7 @@ public class User implements Serializable {
         this.isVisible = true;
         this.description = description;
         this.isCompanyUser = isCompanyUser;
+        this.status = status;
     }
     //endregion
 
