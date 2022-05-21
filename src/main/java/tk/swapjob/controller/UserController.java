@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.EditProfileRequest;
-import tk.swapjob.dao.responses.MessageResponse;
 import tk.swapjob.dao.responses.MatchOfferResponse;
+import tk.swapjob.dao.responses.MessageResponse;
 import tk.swapjob.model.Preference;
 import tk.swapjob.model.Skill;
 import tk.swapjob.model.User;
+import tk.swapjob.repository.MatchOfferRepository;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MatchOfferRepository matchOfferRepository;
 
     @Autowired
     private JwtUtils jwt;
@@ -108,5 +112,22 @@ public class UserController {
         }
 
         return ResponseEntity.ok(user.getMatchOfferList().stream().map(MatchOfferResponse::new).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/user/delete")
+    public ResponseEntity<?> deleteUser() {
+        String companyEmail = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(companyEmail);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        user.getSkillList().clear();
+        user.getPreferenceList().clear();
+        matchOfferRepository.deleteAll(user.getMatchOfferList());
+
+        userRepository.delete(user);
+        return ResponseEntity.ok(true);
     }
 }

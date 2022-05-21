@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Pattern;
 
 public class Utils {
-    public static String REGEX_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static String REGEX_EMAIL_PATTERN = "^[_A-Za-z\\d-+]+(\\.[_A-Za-z\\d-]+)*@"
+            + "[A-Za-z\\d-]+(\\.[A-Za-z\\d]+)*(\\.[A-Za-z]{2,})$";
 
     public static String getUserFromToken(JwtUtils jwtUtils) {
         HttpServletRequest request =
