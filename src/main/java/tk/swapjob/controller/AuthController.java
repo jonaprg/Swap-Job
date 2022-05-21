@@ -13,7 +13,9 @@ import tk.swapjob.dao.requests.LoginRequest;
 import tk.swapjob.dao.requests.SignupRequest;
 import tk.swapjob.dao.responses.JwtResponse;
 import tk.swapjob.dao.responses.MessageResponse;
+import tk.swapjob.model.Status;
 import tk.swapjob.model.User;
+import tk.swapjob.repository.StatusRepository;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.security.services.UserDetailsImpl;
@@ -30,6 +32,9 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    StatusRepository statusRepository;
     @Autowired
     PasswordEncoder encoder;
     @Autowired
@@ -91,7 +96,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid birth date"));
         }
 
-        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description, isCompanyUser);
+        Status status = statusRepository.getStatusById(1);
+
+        User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description, isCompanyUser, status);
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

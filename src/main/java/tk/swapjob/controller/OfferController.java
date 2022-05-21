@@ -89,7 +89,7 @@ public class OfferController {
                     HttpResponse.BodyHandlers.ofString());
 
         } catch (IOException | InterruptedException e) {
-            System.out.println("Error, tpm");
+            System.out.println("Python server not connected, filling with random offers");
         }
 
 
