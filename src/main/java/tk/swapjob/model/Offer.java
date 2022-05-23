@@ -1,6 +1,7 @@
 package tk.swapjob.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import tk.swapjob.dao.requests.OfferRequest;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,11 +56,23 @@ public class Offer implements Serializable {
 
     public Offer(String Title, String description, boolean remote, float salary) {
         this.title = Title;
-        this.description=description;
-        this.isRemote=remote;
-        this.isVisible=true;
-        this.salary=salary;
+        this.description = description;
+        this.isRemote = remote;
+        this.isVisible = true;
+        this.salary = salary;
     }
+
+    public Offer(OfferRequest offerRequest) {
+        this.title = offerRequest.getTitle();
+        this.description = offerRequest.getDescription();
+        this.isRemote = offerRequest.getIsRemote();
+        this.isVisible = offerRequest.getIsVisible();
+        this.salary = offerRequest.getSalary();
+        this.labour = offerRequest.getLabour();
+        this.matchOfferList = new HashSet<>();
+        this.skillList = new HashSet<>();
+    }
+
 
     //endregion
 
@@ -152,6 +165,19 @@ public class Offer implements Serializable {
 
     public void setPreferenceList(Set<Preference> preferenceList) {
         this.preferenceList = preferenceList;
+    }
+
+    public boolean isValid() {
+        return id != null && title != null && description != null
+                && salary != null && isRemote != null && isVisible != null;
+    }
+
+    public boolean isInvalid() {
+        return !isValid();
+    }
+
+    public void addSkill(Skill skill) {
+        this.skillList.add(skill);
     }
 
     //endregion

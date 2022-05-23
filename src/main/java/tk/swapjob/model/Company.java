@@ -1,5 +1,7 @@
 package tk.swapjob.model;
 
+import tk.swapjob.dao.requests.NewCompanyRequest;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -31,6 +33,16 @@ public class Company implements Serializable {
     //region Constructors
     //Every time constructor
     public Company() {
+    }
+
+    public Company(NewCompanyRequest newCompanyRequest) {
+        this.name = newCompanyRequest.getName();
+        this.coordinates = newCompanyRequest.getCoordinates();
+        this.email = newCompanyRequest.getEmail();
+        this.imageUrl = newCompanyRequest.getImageUrl();
+        this.description = newCompanyRequest.getDescription();
+        this.isVisible = newCompanyRequest.getVisible();
+        this.offerList = new HashSet<>();
     }
     //endregion
 

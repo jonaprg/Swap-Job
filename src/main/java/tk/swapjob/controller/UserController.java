@@ -57,6 +57,7 @@ public class UserController {
         String phone = request.getPhone();
         Integer postalCode = request.getPostalCode();
         String description = request.getDescription();
+        boolean visibility = request.getVisible();
 
         Timestamp birthDate;
         try {
@@ -74,6 +75,7 @@ public class UserController {
         user.setPostalCode(postalCode);
         user.setDescription(description);
         user.setEmail(email);
+        user.setVisible(visibility);
         user.getPreferenceList().clear();
         user.getSkillList().clear();
 
