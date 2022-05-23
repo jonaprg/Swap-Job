@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SkillRepository extends CrudRepository<Skill, Long> {
     List<Skill> findAll();
+
+    Skill findById(long id);
 }

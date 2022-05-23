@@ -2,20 +2,25 @@ package tk.swapjob.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tk.swapjob.dao.requests.OfferRequest;
 import tk.swapjob.dao.requests.PythonRequest;
 import tk.swapjob.dao.responses.OfferResponse;
 import tk.swapjob.model.Offer;
 import tk.swapjob.model.User;
 import tk.swapjob.repository.OfferRepository;
+import tk.swapjob.repository.SkillRepository;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,6 +40,9 @@ public class OfferController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
 
     @Autowired
     private JwtUtils jwt;
@@ -109,5 +117,31 @@ public class OfferController {
             recommendedOffersFailed.add(new OfferResponse(offer));
         }
         return ResponseEntity.ok(recommendedOffersFailed);
+    }
+
+    @PostMapping("/offer/new")
+    public ResponseEntity<?> addOffer(@Valid @RequestBody OfferRequest offerRequest) {
+        String username = Utils.getUserFromToken(jwt);
+
+        User user = userRepository.findUserByEmail(username);
+        if (user == null || user.getCompany() == null
+                || offerRequest == null || offerRequest.isInvalid()) {
+            return ResponseEntity.badRequest().body("Invalid user id");
+        }
+
+        try {
+            Offer newOffer = new Offer(offerRequest);
+            for (Long skillId : offerRequest.getSkillList()) {
+                skillRepository.findById(skillId).ifPresent(newOffer::addSkill);
+            }
+
+            offerRepository.save(newOffer);
+            user.getCompany().getOfferList().add(newOffer);
+            userRepository.save(user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid offer");
+        }
+
+        return ResponseEntity.ok(true);
     }
 }

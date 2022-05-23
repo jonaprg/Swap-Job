@@ -216,6 +216,8 @@ public class User implements Serializable {
         this.company = company;
     }
 
+
+
     @JsonIgnore
     public User getProfile() {
         User user = new User();
