@@ -13,6 +13,7 @@ import tk.swapjob.dao.requests.LoginRequest;
 import tk.swapjob.dao.requests.SignupRequest;
 import tk.swapjob.dao.responses.JwtResponse;
 import tk.swapjob.dao.responses.MessageResponse;
+import tk.swapjob.model.Preference;
 import tk.swapjob.model.Status;
 import tk.swapjob.model.User;
 import tk.swapjob.repository.PreferenceRepository;
@@ -113,11 +114,20 @@ public class AuthController {
             skillRepository.findById(skillId).ifPresent(user::addSkill);
         }
 
-        for (Long preferenceId : signUpRequest.getPreferenceIdList()) {
-            preferenceRepository.findById(preferenceId).ifPresent(user::addPreference);
+        for (Preference preference : signUpRequest.getPreferenceIdList()) {
+            preferenceRepository.save(preference);
+            user.addPreference(preference);
         }
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/checkEmail")
+    public ResponseEntity<?> checkEmail(@Valid @RequestBody String email) {
+        if (userRepository.existsUserByEmail(email)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 }
