@@ -1,10 +1,14 @@
 package tk.swapjob.dao.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import tk.swapjob.model.Preference;
 
-import javax.persistence.Column;
-import javax.validation.constraints.*;
-import java.sql.Timestamp;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignupRequest {
     @NotBlank
@@ -43,6 +47,31 @@ public class SignupRequest {
     @NotBlank
     @NotNull
     private boolean isCompanyUser;
+
+    private List<Integer> skillIdList;
+
+    private List<Preference> preferenceIdList;
+
+    public SignupRequest() {
+        skillIdList = new ArrayList<>();
+        preferenceIdList = new ArrayList<>();
+    }
+
+    public List<Integer> getSkillIdList() {
+        return skillIdList;
+    }
+
+    public void setSkillIdList(List<Integer> skillIdList) {
+        this.skillIdList = skillIdList;
+    }
+
+    public List<Preference> getPreferenceIdList() {
+        return preferenceIdList;
+    }
+
+    public void setPreferenceIdList(List<Preference> preferenceIdList) {
+        this.preferenceIdList = preferenceIdList;
+    }
 
     public String getEmail() {
         return email;

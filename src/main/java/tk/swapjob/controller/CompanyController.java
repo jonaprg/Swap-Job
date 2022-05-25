@@ -40,6 +40,19 @@ public class CompanyController {
     @Autowired
     private JwtUtils jwt;
 
+    @GetMapping("/company")
+    public ResponseEntity<?> getCompany() {
+        String companyEmail = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(companyEmail);
+
+        if (user == null || user.getCompany() == null) {
+            return ResponseEntity.badRequest().body("Company not found");
+        }
+        Company company = user.getCompany();
+
+        return ResponseEntity.ok(company);
+    }
+
     @GetMapping("/company/offers")
     public ResponseEntity<?> getPublishedOffers() {
         String companyEmail = Utils.getUserFromToken(jwt);

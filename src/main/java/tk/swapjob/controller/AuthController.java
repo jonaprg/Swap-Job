@@ -13,8 +13,11 @@ import tk.swapjob.dao.requests.LoginRequest;
 import tk.swapjob.dao.requests.SignupRequest;
 import tk.swapjob.dao.responses.JwtResponse;
 import tk.swapjob.dao.responses.MessageResponse;
+import tk.swapjob.model.Preference;
 import tk.swapjob.model.Status;
 import tk.swapjob.model.User;
+import tk.swapjob.repository.PreferenceRepository;
+import tk.swapjob.repository.SkillRepository;
 import tk.swapjob.repository.StatusRepository;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
@@ -35,6 +38,13 @@ public class AuthController {
 
     @Autowired
     StatusRepository statusRepository;
+
+    @Autowired
+    SkillRepository skillRepository;
+
+    @Autowired
+    PreferenceRepository preferenceRepository;
+
     @Autowired
     PasswordEncoder encoder;
     @Autowired
@@ -100,7 +110,24 @@ public class AuthController {
 
         User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description, isCompanyUser, status);
 
+        for (Integer skillId : signUpRequest.getSkillIdList()) {
+            skillRepository.findById(skillId).ifPresent(user::addSkill);
+        }
+
+        for (Preference preference : signUpRequest.getPreferenceIdList()) {
+            preferenceRepository.save(preference);
+            user.addPreference(preference);
+        }
+
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/checkEmail")
+    public ResponseEntity<?> checkEmail(@Valid @RequestBody String email) {
+        if (userRepository.existsUserByEmail(email)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 }

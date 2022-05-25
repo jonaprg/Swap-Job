@@ -216,7 +216,15 @@ public class User implements Serializable {
         this.company = company;
     }
 
+    public void addSkill(Skill skill) {
+        this.skillList.add(skill);
+    }
 
+    public void addPreference(Preference preference) {
+        this.preferenceList.add(preference);
+    }
+
+    //endregion
 
     @JsonIgnore
     public User getProfile() {
