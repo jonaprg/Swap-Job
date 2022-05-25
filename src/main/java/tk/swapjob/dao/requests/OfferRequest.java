@@ -9,12 +9,12 @@ public class OfferRequest {
     private Boolean isRemote;
     private Boolean isVisible;
     private Integer labour;
-    private List<Long> skillList;
+    private List<Integer> skillList;
 
     public OfferRequest() {
     }
 
-    public OfferRequest(String title, String description, Float salary, Boolean isRemote, Boolean isVisible, Integer labour, List<Long> skillList) {
+    public OfferRequest(String title, String description, Float salary, Boolean isRemote, Boolean isVisible, Integer labour, List<Integer> skillList) {
         this.title = title;
         this.description = description;
         this.salary = salary;
@@ -72,11 +72,11 @@ public class OfferRequest {
         this.labour = labour;
     }
 
-    public List<Long> getSkillList() {
+    public List<Integer> getSkillList() {
         return skillList;
     }
 
-    public void setSkillList(List<Long> skillList) {
+    public void setSkillList(List<Integer> skillList) {
         this.skillList = skillList;
     }
 

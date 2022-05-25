@@ -131,7 +131,7 @@ public class OfferController {
 
         try {
             Offer newOffer = new Offer(offerRequest);
-            for (Long skillId : offerRequest.getSkillList()) {
+            for (Integer skillId : offerRequest.getSkillList()) {
                 skillRepository.findById(skillId).ifPresent(newOffer::addSkill);
             }
 
