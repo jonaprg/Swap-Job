@@ -20,7 +20,7 @@ public class NewCompanyRequest {
         this.name = name;
         this.coordinates = coordinates;
         this.email = email;
-        this.imageUrl = imageUrl;
+        this.imageUrl =imageUrl;
         this.description = description;
         this.isVisible = isVisible;
         this.password = password;
