@@ -2,13 +2,9 @@ package tk.swapjob.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.OfferRequest;
 import tk.swapjob.dao.requests.PythonRequest;
 import tk.swapjob.dao.responses.OfferResponse;
@@ -20,7 +16,6 @@ import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -120,7 +115,7 @@ public class OfferController {
     }
 
     @PostMapping("/offer/new")
-    public ResponseEntity<?> addOffer(@Valid @RequestBody OfferRequest offerRequest) {
+    public ResponseEntity<?> addOffer(@RequestBody OfferRequest offerRequest) {
         String username = Utils.getUserFromToken(jwt);
 
         User user = userRepository.findUserByEmail(username);

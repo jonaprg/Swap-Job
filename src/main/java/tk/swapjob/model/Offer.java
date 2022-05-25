@@ -65,8 +65,8 @@ public class Offer implements Serializable {
     public Offer(OfferRequest offerRequest) {
         this.title = offerRequest.getTitle();
         this.description = offerRequest.getDescription();
-        this.isRemote = offerRequest.getIsRemote();
-        this.isVisible = offerRequest.getIsVisible();
+        this.isRemote = offerRequest.getRemote();
+        this.isVisible = offerRequest.getVisible();
         this.salary = offerRequest.getSalary();
         this.labour = offerRequest.getLabour();
         this.matchOfferList = new HashSet<>();
