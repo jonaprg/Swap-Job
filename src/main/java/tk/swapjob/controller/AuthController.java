@@ -15,6 +15,8 @@ import tk.swapjob.dao.responses.JwtResponse;
 import tk.swapjob.dao.responses.MessageResponse;
 import tk.swapjob.model.Status;
 import tk.swapjob.model.User;
+import tk.swapjob.repository.PreferenceRepository;
+import tk.swapjob.repository.SkillRepository;
 import tk.swapjob.repository.StatusRepository;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
@@ -35,6 +37,13 @@ public class AuthController {
 
     @Autowired
     StatusRepository statusRepository;
+
+    @Autowired
+    SkillRepository skillRepository;
+
+    @Autowired
+    PreferenceRepository preferenceRepository;
+
     @Autowired
     PasswordEncoder encoder;
     @Autowired
@@ -99,6 +108,14 @@ public class AuthController {
         Status status = statusRepository.getStatusById(1);
 
         User user = new User(email, password, firstName, lastName, postalCode, phone, birthDate, description, isCompanyUser, status);
+
+        for (Integer skillId : signUpRequest.getSkillIdList()) {
+            skillRepository.findById(skillId).ifPresent(user::addSkill);
+        }
+
+        for (Long preferenceId : signUpRequest.getPreferenceIdList()) {
+            preferenceRepository.findById(preferenceId).ifPresent(user::addPreference);
+        }
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

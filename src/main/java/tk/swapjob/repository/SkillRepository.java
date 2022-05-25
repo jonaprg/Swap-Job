@@ -4,9 +4,10 @@ import org.springframework.data.repository.CrudRepository;
 import tk.swapjob.model.Skill;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SkillRepository extends CrudRepository<Skill, Long> {
     List<Skill> findAll();
 
-    Skill findById(long id);
+    Optional<Skill> findById(long id);
 }

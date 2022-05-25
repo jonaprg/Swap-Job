@@ -16,9 +16,7 @@ import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -87,12 +85,5 @@ public class MatchOfferController {
         userRepository.save(user);
 
         return ResponseEntity.ok(true);
-    }
-
-    @PostMapping("/likeHistory")
-    public Set<MatchOffer> likeHistory() {
-        String email = Utils.getUserFromToken(jwt);
-        User user = userRepository.findUserByEmail(email);
-        return user.getMatchOfferList();
     }
 }
