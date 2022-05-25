@@ -26,22 +26,6 @@ public class OfferRequest {
         this.skillList = skillList;
     }
 
-    public Boolean getRemote() {
-        return isRemote;
-    }
-
-    public void setRemote(Boolean remote) {
-        isRemote = remote;
-    }
-
-    public Boolean getVisible() {
-        return isVisible;
-    }
-
-    public void setVisible(Boolean visible) {
-        isVisible = visible;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -66,20 +50,20 @@ public class OfferRequest {
         this.salary = salary;
     }
 
-    public Boolean getIsRemote() {
+    public Boolean getRemote() {
         return isRemote;
     }
 
-    public void setIsRemote(Boolean isRemote) {
-        this.isRemote = isRemote;
+    public void setRemote(Boolean remote) {
+        isRemote = remote;
     }
 
-    public Boolean getIsVisible() {
+    public Boolean getVisible() {
         return isVisible;
     }
 
-    public void setIsVisible(Boolean isVisible) {
-        this.isVisible = isVisible;
+    public void setVisible(Boolean visible) {
+        isVisible = visible;
     }
 
     public Integer getLabour() {
