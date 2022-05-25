@@ -1,5 +1,7 @@
 package tk.swapjob.dao.requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class OfferRequest {
@@ -22,6 +24,22 @@ public class OfferRequest {
         this.isVisible = isVisible;
         this.labour = labour;
         this.skillList = skillList;
+    }
+
+    public Boolean getRemote() {
+        return isRemote;
+    }
+
+    public void setRemote(Boolean remote) {
+        isRemote = remote;
+    }
+
+    public Boolean getVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(Boolean visible) {
+        isVisible = visible;
     }
 
     public String getTitle() {
@@ -80,6 +98,7 @@ public class OfferRequest {
         this.skillList = skillList;
     }
 
+    @JsonIgnore
     public boolean isValid() {
         return this.title != null && this.description != null
                 && this.salary != null && this.isRemote != null
@@ -87,6 +106,7 @@ public class OfferRequest {
                 && this.skillList != null;
     }
 
+    @JsonIgnore
     public boolean isInvalid() {
         return !isValid();
     }
