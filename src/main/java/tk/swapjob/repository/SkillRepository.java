@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface SkillRepository extends CrudRepository<Skill, Long> {
     List<Skill> findAll();
 
-    Optional<Skill> findById(long id);
+    Optional<Skill> findById(Integer id);
 }
