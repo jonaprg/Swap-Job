@@ -6,7 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.NewCompanyRequest;
 import tk.swapjob.dao.requests.SignupRequest;
-import tk.swapjob.model.*;
+import tk.swapjob.dao.responses.CompanyMatchesResponse;
+import tk.swapjob.model.Company;
+import tk.swapjob.model.Status;
+import tk.swapjob.model.User;
 import tk.swapjob.repository.*;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
@@ -75,13 +78,28 @@ public class CompanyController {
             return ResponseEntity.badRequest().body("Company not found");
         }
         Company company = user.getCompany();
-        List<Offer> offerList = offerRepository.getOffersByCompanyId(company.getId());
-        List<MatchOffer> matchOfferList = new ArrayList<>();
-        for (Offer offer : offerList) {
-            matchOfferList.addAll(matchOfferRepository.findMatchOffersByOfferId(offer.getId()));
+
+        if (company.getId() == null) {
+            return ResponseEntity.badRequest().body("Company not found");
         }
 
-        return ResponseEntity.ok(matchOfferList);
+        List<CompanyMatchesResponse> response = new ArrayList<>();
+
+        offerRepository.findByIsVisibleIsTrueAndCompanyId(company.getId()).forEach(
+                offer -> {
+                    CompanyMatchesResponse match = new CompanyMatchesResponse();
+                    match.setOfferId(offer.getId());
+                    matchOfferRepository.findMatchOffersByOfferId(offer.getId()).forEach(matchOffer -> {
+                        match.getUserList().add(matchOffer.getUser());
+                    });
+                    if (match.getUserList().size() > 0) {
+                        response.add(match);
+                    }
+                }
+        );
+
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/company/new")
