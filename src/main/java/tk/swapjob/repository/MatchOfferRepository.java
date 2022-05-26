@@ -1,7 +1,6 @@
 package tk.swapjob.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import tk.swapjob.controller.MatchOfferController;
 import tk.swapjob.model.MatchOffer;
 
 import java.util.List;
