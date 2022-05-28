@@ -41,6 +41,7 @@ public class PreferenceController {
         user.getPreferenceList().clear();
 
         for (Preference preference : preferenceList) {
+            preferenceRepository.save(preference);
             user.addPreference(preference);
         }
 
