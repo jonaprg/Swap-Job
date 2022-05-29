@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.EditProfileRequest;
 import tk.swapjob.dao.responses.MatchOfferResponse;
 import tk.swapjob.dao.responses.MessageResponse;
-import tk.swapjob.model.Preference;
-import tk.swapjob.model.Skill;
 import tk.swapjob.model.User;
 import tk.swapjob.repository.MatchOfferRepository;
 import tk.swapjob.repository.UserRepository;
