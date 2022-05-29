@@ -76,16 +76,6 @@ public class UserController {
         user.setDescription(description);
         user.setEmail(email);
         user.setVisible(visibility);
-        user.getPreferenceList().clear();
-        user.getSkillList().clear();
-
-        for (Skill skill : request.getSkillList()) {
-            user.getSkillList().add(skill);
-        }
-
-        for (Preference preference : request.getPreferenceList()) {
-            user.getPreferenceList().add(preference);
-        }
 
         userRepository.save(user);
 
