@@ -240,6 +240,7 @@ public class User implements Serializable {
         user.setDescription(this.description);
         user.setStatus(this.status);
         user.setSkillList(this.skillList);
+        user.setPreferenceList(this.preferenceList);
         return user;
     }
 

@@ -1,10 +1,6 @@
 package tk.swapjob.dao.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import tk.swapjob.model.Preference;
-import tk.swapjob.model.Skill;
-
-import java.util.List;
 
 public class EditProfileRequest {
     private String firstName;
@@ -16,8 +12,7 @@ public class EditProfileRequest {
     private Boolean isVisible;
     private String description;
     private Integer status_id;
-    private List<Skill> skillList;
-    private List<Preference> preferenceList;
+
 
     public String getFirstName() {
         return firstName;
@@ -89,22 +84,6 @@ public class EditProfileRequest {
 
     public void setStatus_id(Integer status_id) {
         this.status_id = status_id;
-    }
-
-    public List<Skill> getSkillList() {
-        return skillList;
-    }
-
-    public void setSkillList(List<Skill> skillList) {
-        this.skillList = skillList;
-    }
-
-    public List<Preference> getPreferenceList() {
-        return preferenceList;
-    }
-
-    public void setPreferenceList(List<Preference> preferenceList) {
-        this.preferenceList = preferenceList;
     }
 
     @JsonIgnore

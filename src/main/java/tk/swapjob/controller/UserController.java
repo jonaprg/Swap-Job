@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.EditProfileRequest;
 import tk.swapjob.dao.responses.MatchOfferResponse;
 import tk.swapjob.dao.responses.MessageResponse;
-import tk.swapjob.model.Preference;
-import tk.swapjob.model.Skill;
 import tk.swapjob.model.User;
 import tk.swapjob.repository.MatchOfferRepository;
 import tk.swapjob.repository.UserRepository;
@@ -76,16 +74,6 @@ public class UserController {
         user.setDescription(description);
         user.setEmail(email);
         user.setVisible(visibility);
-        user.getPreferenceList().clear();
-        user.getSkillList().clear();
-
-        for (Skill skill : request.getSkillList()) {
-            user.getSkillList().add(skill);
-        }
-
-        for (Preference preference : request.getPreferenceList()) {
-            user.getPreferenceList().add(preference);
-        }
 
         userRepository.save(user);
 
