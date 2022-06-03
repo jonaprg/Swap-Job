@@ -130,6 +130,8 @@ public class UserController {
         return ResponseEntity.ok(true);
     }
 
+    Set<PosixFilePermission> readwrite = PosixFilePermissions.fromString("rw-rw-rw-");
+
     @PostMapping("/user/uploadcv")
     public ResponseEntity<?> uploadcv(@RequestParam("file") MultipartFile file) {
         String companyEmail = Utils.getUserFromToken(jwt);
@@ -142,7 +144,6 @@ public class UserController {
         Path root = Paths.get("/var/www/html/pdf", user.getId() + "_cv" + ".pdf");
         if (!Files.exists(root)) {
             try {
-                Set<PosixFilePermission> readwrite = PosixFilePermissions.fromString("rw-rw-rw-");
                 Files.createFile(root, PosixFilePermissions.asFileAttribute(readwrite));
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -151,6 +152,7 @@ public class UserController {
         }
         try {
             Files.copy(file.getInputStream(), root, StandardCopyOption.REPLACE_EXISTING);
+            Files.setPosixFilePermissions(root.toAbsolutePath(), readwrite);
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
@@ -169,9 +171,9 @@ public class UserController {
         }
 
         Path root = Paths.get("/var/www/html/pdf", user.getId() + "_title" + ".pdf");
+
         if (!Files.exists(root)) {
             try {
-                Set<PosixFilePermission> readwrite = PosixFilePermissions.fromString("rw-rw-rw-");
                 Files.createFile(root, PosixFilePermissions.asFileAttribute(readwrite));
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -180,6 +182,7 @@ public class UserController {
         }
         try {
             Files.copy(file.getInputStream(), root, StandardCopyOption.REPLACE_EXISTING);
+            Files.setPosixFilePermissions(root.toAbsolutePath(), readwrite);
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
