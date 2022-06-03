@@ -3,6 +3,7 @@ package tk.swapjob.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tk.swapjob.dao.requests.EditProfileRequest;
 import tk.swapjob.dao.responses.MatchOfferResponse;
 import tk.swapjob.dao.responses.MessageResponse;
@@ -13,6 +14,11 @@ import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
@@ -118,6 +124,62 @@ public class UserController {
         matchOfferRepository.deleteAll(user.getMatchOfferList());
 
         userRepository.delete(user);
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/user/uploadcv")
+    public ResponseEntity<?> uploadcv(@RequestParam("file") MultipartFile file) {
+        String companyEmail = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(companyEmail);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        Path root = Paths.get("/var/www/html/pdf", user.getId() + "_cv" + ".pdf");
+        if (!Files.exists(root)) {
+            try {
+                Files.createFile(root);
+            } catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
+                return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            }
+        }
+        try {
+            Files.copy(file.getInputStream(), root, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/user/uploadtitle")
+    public ResponseEntity<?> uploadtitle(@RequestParam("file") MultipartFile file) {
+        String companyEmail = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(companyEmail);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        Path root = Paths.get("/var/www/html/pdf", user.getId() + "_title" + ".pdf");
+        if (!Files.exists(root)) {
+            try {
+                Files.createFile(root);
+            } catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
+                return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            }
+        }
+        try {
+            Files.copy(file.getInputStream(), root, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+
         return ResponseEntity.ok(true);
     }
 }
