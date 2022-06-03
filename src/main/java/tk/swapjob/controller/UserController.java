@@ -19,7 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.sql.Timestamp;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -139,7 +142,8 @@ public class UserController {
         Path root = Paths.get("/var/www/html/pdf", user.getId() + "_cv" + ".pdf");
         if (!Files.exists(root)) {
             try {
-                Files.createFile(root);
+                Set<PosixFilePermission> readwrite = PosixFilePermissions.fromString("rw-rw-rw-");
+                Files.createFile(root, PosixFilePermissions.asFileAttribute(readwrite));
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
                 return ResponseEntity.badRequest().body("Error: " + e.getMessage());
@@ -167,7 +171,8 @@ public class UserController {
         Path root = Paths.get("/var/www/html/pdf", user.getId() + "_title" + ".pdf");
         if (!Files.exists(root)) {
             try {
-                Files.createFile(root);
+                Set<PosixFilePermission> readwrite = PosixFilePermissions.fromString("rw-rw-rw-");
+                Files.createFile(root, PosixFilePermissions.asFileAttribute(readwrite));
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
                 return ResponseEntity.badRequest().body("Error: " + e.getMessage());
