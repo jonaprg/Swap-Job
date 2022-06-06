@@ -54,11 +54,11 @@ public class MatchOfferController {
         matchOffer.setContracted(false);
         matchOffer.setFinalized(false);
 
-        matchOfferRepository.save(matchOffer);
-
-        user.getMatchOfferList().add(matchOffer);
-
-        userRepository.save(user);
+        if (!matchOfferRepository.existsByOfferIdAndUserId(request.getOfferId(), user.getId())) {
+            matchOfferRepository.save(matchOffer);
+            user.getMatchOfferList().add(matchOffer);
+            userRepository.save(user);
+        }
 
         return ResponseEntity.ok(true);
     }

@@ -92,7 +92,7 @@ public class OfferController {
                     HttpResponse.BodyHandlers.ofString());
 
         } catch (IOException | InterruptedException e) {
-            System.out.println("Python server not connected, filling with random offers");
+            System.out.println("Error, tpm");
         }
 
 
@@ -136,6 +136,27 @@ public class OfferController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid offer");
         }
+
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/offer/disable")
+    public ResponseEntity<?> disableOffer(@RequestBody Long offerId) {
+        String username = Utils.getUserFromToken(jwt);
+
+        User user = userRepository.findUserByEmail(username);
+        if (user == null || user.getCompany() == null) {
+            return ResponseEntity.badRequest().body("Invalid user id");
+        }
+
+        Offer offer = offerRepository.findById(offerId).orElse(null);
+
+        if (offer == null) {
+            return ResponseEntity.badRequest().body("Invalid offer id");
+        }
+
+        offer.setVisible(false);
+        offerRepository.save(offer);
 
         return ResponseEntity.ok(true);
     }
