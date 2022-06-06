@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ContractedRequest {
 
-    private Long matchOfferId;
+    private Integer matchOfferId;
     private Boolean isContracted;
 
     public ContractedRequest() {
     }
 
-    public ContractedRequest(Long matchOfferId, Boolean isContracted) {
+    public ContractedRequest(Integer matchOfferId, Boolean isContracted) {
         this.matchOfferId = matchOfferId;
         this.isContracted = isContracted;
     }
 
-    public Long getMatchOfferId() {
+    public Integer getMatchOfferId() {
         return matchOfferId;
     }
 
-    public void setMatchOfferId(Long matchOfferId) {
+    public void setMatchOfferId(Integer matchOfferId) {
         this.matchOfferId = matchOfferId;
     }
 
