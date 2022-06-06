@@ -8,6 +8,7 @@ import tk.swapjob.dao.requests.NewCompanyRequest;
 import tk.swapjob.dao.requests.SignupRequest;
 import tk.swapjob.dao.responses.CompanyMatchesResponse;
 import tk.swapjob.model.Company;
+import tk.swapjob.model.Offer;
 import tk.swapjob.model.Status;
 import tk.swapjob.model.User;
 import tk.swapjob.repository.*;
@@ -66,7 +67,10 @@ public class CompanyController {
         }
         Company company = user.getCompany();
 
-        return ResponseEntity.ok(company.getOfferList());
+        //return only offers with isVisible true
+        List<Offer> offers = offerRepository.findByIsVisibleIsTrueAndCompanyId(company.getId());
+
+        return ResponseEntity.ok(offers);
     }
 
     @GetMapping("/company/matches")

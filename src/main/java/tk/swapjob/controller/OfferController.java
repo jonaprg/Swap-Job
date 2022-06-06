@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import tk.swapjob.dao.requests.OfferRequest;
 import tk.swapjob.dao.requests.PythonRequest;
 import tk.swapjob.dao.responses.OfferResponse;
+import tk.swapjob.model.MatchOffer;
 import tk.swapjob.model.Offer;
 import tk.swapjob.model.User;
+import tk.swapjob.repository.MatchOfferRepository;
 import tk.swapjob.repository.OfferRepository;
 import tk.swapjob.repository.SkillRepository;
 import tk.swapjob.repository.UserRepository;
@@ -38,6 +40,9 @@ public class OfferController {
 
     @Autowired
     private SkillRepository skillRepository;
+
+    @Autowired
+    private MatchOfferRepository matchOfferRepository;
 
     @Autowired
     private JwtUtils jwt;
@@ -92,7 +97,7 @@ public class OfferController {
                     HttpResponse.BodyHandlers.ofString());
 
         } catch (IOException | InterruptedException e) {
-            System.out.println("Python server not connected, filling with random offers");
+            System.out.println("Error, tpm");
         }
 
 
@@ -136,6 +141,53 @@ public class OfferController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid offer");
         }
+
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/offer/disable")
+    public ResponseEntity<?> disableOffer(@RequestBody Long offerId) {
+        String username = Utils.getUserFromToken(jwt);
+
+        User user = userRepository.findUserByEmail(username);
+        if (user == null || user.getCompany() == null) {
+            return ResponseEntity.badRequest().body("Invalid user id");
+        }
+
+        Offer offer = offerRepository.findById(offerId).orElse(null);
+
+        if (offer == null) {
+            return ResponseEntity.badRequest().body("Invalid offer id");
+        }
+
+        offer.setVisible(false);
+        offerRepository.save(offer);
+
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/offer/finalize")
+    public ResponseEntity<?> finalizeOffer(@RequestBody Long offerId) {
+        String username = Utils.getUserFromToken(jwt);
+
+        User user = userRepository.findUserByEmail(username);
+        if (user == null || user.getCompany() == null) {
+            return ResponseEntity.badRequest().body("Invalid user id");
+        }
+
+        Offer offer = offerRepository.findById(offerId).orElse(null);
+
+        if (offer == null) {
+            return ResponseEntity.badRequest().body("Invalid offer id");
+        }
+
+        for (MatchOffer matchOffer : offer.getMatchOfferList()) {
+            matchOffer.setFinalized(true);
+            matchOfferRepository.save(matchOffer);
+        }
+
+        offer.setVisible(false);
+        offerRepository.save(offer);
 
         return ResponseEntity.ok(true);
     }

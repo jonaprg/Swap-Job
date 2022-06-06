@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import tk.swapjob.dao.requests.ContractedRequest;
 import tk.swapjob.dao.requests.MatchOfferRequest;
 import tk.swapjob.model.MatchOffer;
 import tk.swapjob.model.Offer;
@@ -54,11 +55,11 @@ public class MatchOfferController {
         matchOffer.setContracted(false);
         matchOffer.setFinalized(false);
 
-        matchOfferRepository.save(matchOffer);
-
-        user.getMatchOfferList().add(matchOffer);
-
-        userRepository.save(user);
+        if (!matchOfferRepository.existsByOfferIdAndUserId(request.getOfferId(), user.getId())) {
+            matchOfferRepository.save(matchOffer);
+            user.getMatchOfferList().add(matchOffer);
+            userRepository.save(user);
+        }
 
         return ResponseEntity.ok(true);
     }
@@ -86,4 +87,29 @@ public class MatchOfferController {
 
         return ResponseEntity.ok(true);
     }
+
+
+    @PostMapping("/setContracted")
+    public ResponseEntity<?> setContracted(@RequestBody ContractedRequest request) {
+        String email = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Invalid user");
+        }
+
+        Optional<MatchOffer> matchOffer = matchOfferRepository.findById(request.getMatchOfferId());
+
+        if (matchOffer.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid offer id or user id");
+        }
+
+        MatchOffer matchOffer1 = matchOffer.get();
+        matchOffer1.setContracted(request.getContracted());
+
+        matchOfferRepository.save(matchOffer1);
+
+        return ResponseEntity.ok(true);
+    }
+
 }

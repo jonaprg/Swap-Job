@@ -7,8 +7,12 @@ import org.springframework.web.multipart.MultipartFile;
 import tk.swapjob.dao.requests.EditProfileRequest;
 import tk.swapjob.dao.responses.MatchOfferResponse;
 import tk.swapjob.dao.responses.MessageResponse;
+import tk.swapjob.model.Company;
+import tk.swapjob.model.Offer;
 import tk.swapjob.model.User;
+import tk.swapjob.repository.CompanyRepository;
 import tk.swapjob.repository.MatchOfferRepository;
+import tk.swapjob.repository.OfferRepository;
 import tk.swapjob.repository.UserRepository;
 import tk.swapjob.security.jwt.JwtUtils;
 import tk.swapjob.utils.Utils;
@@ -34,6 +38,12 @@ public class UserController {
 
     @Autowired
     private MatchOfferRepository matchOfferRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private OfferRepository offerRepository;
 
     @Autowired
     private JwtUtils jwt;
@@ -125,6 +135,17 @@ public class UserController {
         user.getSkillList().clear();
         user.getPreferenceList().clear();
         matchOfferRepository.deleteAll(user.getMatchOfferList());
+
+        if (user.getCompany() != null) {
+            for (Offer offer : user.getCompany().getOfferList()) {
+                matchOfferRepository.deleteAll(offer.getMatchOfferList());
+                offerRepository.delete(offer);
+            }
+            Company company = user.getCompany();
+            user.setCompany(null);
+            companyRepository.delete(company);
+            userRepository.save(user);
+        }
 
         userRepository.delete(user);
         return ResponseEntity.ok(true);

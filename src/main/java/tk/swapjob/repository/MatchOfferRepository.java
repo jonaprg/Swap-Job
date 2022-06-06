@@ -9,4 +9,7 @@ public interface MatchOfferRepository extends CrudRepository<MatchOffer, Long> {
     List<MatchOffer> findMatchOffersByOfferId(Long offerId);
 
     MatchOffer findMatchOfferByOfferIdAndUserId(Long offerId, Integer userId);
+
+    Boolean existsByOfferIdAndUserId(Long offerId, Integer userId);
+
 }
