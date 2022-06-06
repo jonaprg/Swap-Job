@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.swapjob.dao.requests.ContractedRequest;
 import tk.swapjob.dao.requests.MatchOfferRequest;
+import tk.swapjob.dao.requests.RemoveMatchRequest;
 import tk.swapjob.model.MatchOffer;
 import tk.swapjob.model.Offer;
 import tk.swapjob.model.User;
@@ -112,4 +113,20 @@ public class MatchOfferController {
         return ResponseEntity.ok(true);
     }
 
+
+    @PostMapping("/removeMatchCompany")
+    public ResponseEntity<?> removeMatchCompany(@RequestBody RemoveMatchRequest request) {
+        String email = Utils.getUserFromToken(jwt);
+        User user = userRepository.findUserByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Invalid user");
+        }
+
+        MatchOffer matchOffer = matchOfferRepository.findMatchOfferByOfferIdAndUserId(request.getOfferId(), user.getId());
+
+        matchOfferRepository.delete(matchOffer);
+
+        return ResponseEntity.ok(true);
+    }
 }
