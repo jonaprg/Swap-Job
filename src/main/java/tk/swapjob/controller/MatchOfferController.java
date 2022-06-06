@@ -99,7 +99,7 @@ public class MatchOfferController {
             return ResponseEntity.badRequest().body("Invalid user");
         }
 
-        Optional<MatchOffer> matchOffer = matchOfferRepository.findById(request.getMatchOfferId());
+        Optional<MatchOffer> matchOffer = matchOfferRepository.findMatchOfferById(request.getMatchOfferId());
 
         if (matchOffer.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid offer id or user id");
