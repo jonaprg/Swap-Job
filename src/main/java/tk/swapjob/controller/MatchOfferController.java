@@ -123,7 +123,11 @@ public class MatchOfferController {
             return ResponseEntity.badRequest().body("Invalid user");
         }
 
-        MatchOffer matchOffer = matchOfferRepository.findMatchOfferByOfferIdAndUserId(request.getOfferId(), user.getId());
+        MatchOffer matchOffer = matchOfferRepository.findMatchOfferByOfferIdAndUserId(request.getOfferId(), request.getUserId());
+
+        if (matchOffer == null){
+            return ResponseEntity.badRequest().body("Invalid offer id or user id");
+        }
 
         matchOfferRepository.delete(matchOffer);
 
